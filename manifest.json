@@ -5,7 +5,7 @@
   "description": "Press Ctrl+Shift+Y to open a searchbar type input to initiate a chat with ChatGPT.",
   "browser_specific_settings": {
     "gecko": {
-      "id": "zen-chatgpt-launcher@example.com",
+      "id": "instant-search-gpt@pedroelizalde",
       "data_collection_permissions": {
         "required": ["none"],
         "optional": []
