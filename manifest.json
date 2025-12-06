@@ -3,6 +3,10 @@
   "name": "ChatGPT Instant Search",
   "version": "1.2",
   "description": "Press Ctrl+Shift+Y to open a searchbar type input to initiate a chat with ChatGPT.",
+  "icons": {
+    "48": "icon.svg",
+    "96": "icon.svg"
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "instant-search-gpt@pedroelizalde",
@@ -22,7 +26,7 @@
       "suggested_key": {
         "default": "Ctrl+Shift+Y"
       },
-      "description": "Open ChatGPT Launcher"
+      "description": "Instant Search for ChatGPT"
     }
   }
 }
