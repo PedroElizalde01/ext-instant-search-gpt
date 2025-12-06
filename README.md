@@ -14,10 +14,10 @@ A browser extension to quickly send prompts to AI assistants like ChatGPT and Cl
 
 | Shortcut | Action |
 |----------|--------|
-| `Ctrl+Shift+1` | Open ChatGPT |
-| `Ctrl+Shift+2` | Open ChatGPT (Temporary) |
-| `Ctrl+Shift+3` | Open Claude |
-| `Ctrl+Shift+4` | Open Claude (Incognito) |
+| `Alt+1` | Open ChatGPT |
+| `Alt+2` | Open ChatGPT (Temporary) |
+| `Alt+3` | Open Claude |
+| `Alt+4` | Open Claude (Incognito) |
 
 > **Tip**: Click the AI icon in the modal to toggle between normal and temporary/incognito modes.
 

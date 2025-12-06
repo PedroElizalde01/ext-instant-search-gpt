@@ -53,7 +53,6 @@ const ProviderUtils = (function() {
     timeout = timeout || 10000;
     
     return new Promise((resolve, reject) => {
-      // Check if any already exist
       for (const selector of selectors) {
         const existing = document.querySelector(selector);
         if (existing) return resolve(existing);
@@ -111,7 +110,6 @@ const ProviderUtils = (function() {
   }
 
   async function findFileInput(selectors) {
-    // First try to find existing file input
     for (const selector of selectors.fileInput) {
       const input = document.querySelector(selector);
       if (input) return input;

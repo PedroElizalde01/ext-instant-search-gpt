@@ -37,25 +37,25 @@
   "commands": {
     "open-chatgpt": {
       "suggested_key": {
-        "default": "Ctrl+Shift+1"
+        "default": "Alt+1"
       },
       "description": "Open ChatGPT"
     },
     "open-chatgpt-temp": {
       "suggested_key": {
-        "default": "Ctrl+Shift+2"
+        "default": "Alt+2"
       },
       "description": "Open ChatGPT (Temporary Chat)"
     },
     "open-claude": {
       "suggested_key": {
-        "default": "Ctrl+Shift+3"
+        "default": "Alt+3"
       },
       "description": "Open Claude"
     },
     "open-claude-incognito": {
       "suggested_key": {
-        "default": "Ctrl+Shift+4"
+        "default": "Alt+4"
       },
       "description": "Open Claude (Incognito)"
     }

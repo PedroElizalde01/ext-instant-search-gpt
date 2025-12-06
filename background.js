@@ -42,9 +42,7 @@
   });
 
   B.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    // Status updates (just log them)
     if (msg.type === "INJECT_STATUS") {
-      console.log("[AI Search Status]", msg.status, msg.details || "");
       return;
     }
 
@@ -107,5 +105,4 @@
     });
   }
 
-  console.log("AI Instant Search background script loaded");
 })();

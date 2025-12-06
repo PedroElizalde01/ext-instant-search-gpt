@@ -78,8 +78,8 @@ const PROVIDERS = {
     colors: {
       normal: "#cc785c",
       normalHover: "#d4956d",
-      temporary: "#8b5cf6",
-      temporaryHover: "#a78bfa"
+      temporary: "#f8f7fa",
+      temporaryHover: "#f8f7fa"
     },
     
     hasTemporaryMode: true,

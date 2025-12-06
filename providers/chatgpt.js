@@ -50,7 +50,6 @@
     const textarea = await waitForAnySelector(SELECTORS.textarea);
 
     if (textarea.tagName === "DIV" || textarea.isContentEditable) {
-      // ContentEditable div (ChatGPT's current UI)
       textarea.focus();
       textarea.innerHTML = "";
       

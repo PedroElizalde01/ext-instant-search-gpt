@@ -1,3 +1,6 @@
+if (typeof window.__aiSearchModalLoaded === "undefined") {
+  window.__aiSearchModalLoaded = true;
+
 const AISearchModal = (function() {
   "use strict";
 
@@ -93,7 +96,7 @@ const AISearchModal = (function() {
     if (isTemporaryMode && currentProvider.hasTemporaryMode) {
       icon.style.color = currentProvider.colors.temporary;
       indicator.style.color = currentProvider.colors.temporary;
-      indicator.textContent = "Temporary";
+      indicator.textContent = currentProvider.id === "claude" ? "Incognito" : "Temporary";
       indicator.classList.add("temporary");
     } else {
       icon.style.color = currentProvider.colors.normal;
@@ -145,9 +148,21 @@ const AISearchModal = (function() {
 
   function open(provider, temporary, callback) {
     const existing = document.getElementById(MODAL_ID);
-    if (existing) existing.remove();
     
-    pastedImages = [];
+    let preservedText = "";
+    let preservedImages = [];
+    
+    if (existing) {
+      const existingInput = existing.querySelector("#ai-search-input");
+      if (existingInput) {
+        preservedText = existingInput.value;
+      }
+      preservedImages = [...pastedImages];
+      existing.remove();
+    }
+    
+    pastedImages = preservedImages;
+    
     currentProvider = provider;
     isTemporaryMode = temporary && provider.hasTemporaryMode;
     onSubmitCallback = callback;
@@ -174,6 +189,11 @@ const AISearchModal = (function() {
     }
     
     if (input) {
+      if (preservedText) {
+        input.value = preservedText;
+        autoResize(input);
+      }
+      
       input.addEventListener("input", () => autoResize(input));
       
       input.addEventListener("keydown", function(e) {
@@ -206,6 +226,10 @@ const AISearchModal = (function() {
       });
       
       setTimeout(() => input.focus(), 50);
+    }
+    
+    if (preservedImages.length > 0) {
+      renderImagePreviews();
     }
     
     document.addEventListener("paste", handlePaste);
@@ -241,3 +265,6 @@ const AISearchModal = (function() {
   });
 })();
 
+window.AISearchModal = AISearchModal;
+
+} 
