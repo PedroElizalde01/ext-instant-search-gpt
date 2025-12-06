@@ -1,8 +1,12 @@
 {
   "manifest_version": 2,
-  "name": "ChatGPT Instant Search",
-  "version": "1.2",
-  "description": "Press Ctrl+Shift+Y to open a searchbar type input to initiate a chat with ChatGPT.",
+  "name": "AI Instant Search",
+  "version": "2.0",
+  "description": "Press keyboard shortcuts to quickly search AI assistants like ChatGPT and Claude.",
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "instant-search-gpt@pedroelizalde",
@@ -12,23 +16,52 @@
       }
     }
   },
-  "permissions": ["activeTab", "tabs", "*://chatgpt.com/*"],
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "*://chatgpt.com/*",
+    "*://claude.ai/*"
+  ],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "config/providers.js",
+      "background.js"
+    ],
     "persistent": true
   },
+  "web_accessible_resources": [
+    "content/modal.css",
+    "providers/*.js"
+  ],
   "commands": {
-    "open-palette": {
+    "open-chatgpt": {
       "suggested_key": {
-        "default": "Ctrl+Shift+Y"
+        "default": "Ctrl+Shift+1"
       },
-      "description": "Instant Search for ChatGPT"
+      "description": "Open ChatGPT"
     },
-    "open-palette-temp": {
+    "open-chatgpt-temp": {
       "suggested_key": {
-        "default": "Ctrl+Shift+U"
+        "default": "Ctrl+Shift+2"
       },
-      "description": "Instant Search for ChatGPT (Temporary Chat)"
+      "description": "Open ChatGPT (Temporary Chat)"
+    },
+    "open-claude": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+3"
+      },
+      "description": "Open Claude"
+    },
+    "open-claude-incognito": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+4"
+      },
+      "description": "Open Claude (Incognito)"
     }
+  },
+  "browser_action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": "icons/icon.svg"
   }
 }

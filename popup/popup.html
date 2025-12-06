@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Instant Search</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <h1>AI Instant Search</h1>
+      <span class="version">v2.0</span>
+    </header>
+
+    <section class="shortcuts-section">
+      <h2>Keyboard Shortcuts</h2>
+      <div class="shortcut-list" id="shortcut-list">
+        <!-- Populated by JavaScript -->
+      </div>
+      <p class="shortcut-hint">
+        Customize shortcuts in your browser's extension settings
+      </p>
+    </section>
+
+    <section class="providers-section">
+      <h2>Available Providers</h2>
+      <div class="provider-list" id="provider-list">
+      </div>
+    </section>
+
+    <section class="help-section">
+      <h2>How to Use</h2>
+      <ol>
+        <li>Press the keyboard shortcut on any webpage</li>
+        <li>Type your prompt in the modal</li>
+        <li>Paste images if needed (up to 5)</li>
+        <li>Press Enter to send</li>
+      </ol>
+      <p class="tip">
+        <strong>Tip:</strong> Click the AI icon in the modal to toggle between normal and temporary chat modes.
+      </p>
+    </section>
+
+    <footer class="popup-footer">
+      <a href="https://github.com/yourusername/ai-instant-search" target="_blank">GitHub</a>
+      <span>•</span>
+      <a href="#" id="report-issue">Report Issue</a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
+
