@@ -1,17 +1,10 @@
-// chatgpt_inject.js - Runs on ChatGPT tab to inject text + image and auto-submit
-// Wrapped in IIFE to avoid variable collisions with ChatGPT's page
-
 (function() {
   "use strict";
   
-  // Prevent double-injection
   if (window.__chatgptInjectLoaded) {
-    console.log("[ChatGPT Inject] Already loaded, skipping...");
     return;
   }
   window.__chatgptInjectLoaded = true;
-
-  console.log("[ChatGPT Inject] ========== SCRIPT STARTING ==========");
 
   function getBrowser() {
     if (typeof browser !== "undefined") return browser;
@@ -20,25 +13,17 @@
   }
 
   const browserAPI = getBrowser();
-  console.log("[ChatGPT Inject] Browser API:", browserAPI ? "found" : "NOT FOUND");
 
-  // Send status back to background script for logging
   function reportStatus(status, details) {
-    console.log("[ChatGPT Inject]", status, details || "");
     try {
       if (browserAPI && browserAPI.runtime && browserAPI.runtime.sendMessage) {
         browserAPI.runtime.sendMessage({ type: "INJECT_STATUS", status: status, details: details || null }).catch(function(e) {
-          console.log("[ChatGPT Inject] Failed to send status:", e);
         });
       }
     } catch (e) {
       console.log("[ChatGPT Inject] Error in reportStatus:", e);
     }
   }
-
-  // ============================================
-  // DOM HELPERS
-  // ============================================
 
   function waitForSelector(selector, timeout) {
     timeout = timeout || 10000;
@@ -66,7 +51,6 @@
   function waitForAnySelector(selectors, timeout) {
     timeout = timeout || 10000;
     return new Promise(function(resolve, reject) {
-      // Check if any already exists
       for (var i = 0; i < selectors.length; i++) {
         var existing = document.querySelector(selectors[i]);
         if (existing) return resolve(existing);
@@ -96,10 +80,6 @@
     return new Promise(function(resolve) { setTimeout(resolve, ms); });
   }
 
-  // ============================================
-  // CHATGPT DOM INTERACTION
-  // ============================================
-
   async function sendText(text) {
     if (!text) return null;
 
@@ -112,7 +92,6 @@
     ];
 
     var textarea = await waitForAnySelector(textareaSelectors);
-    console.log("[ChatGPT Inject] Found textarea:", textarea.tagName);
 
     if (textarea.tagName === "DIV" || textarea.isContentEditable) {
       textarea.focus();
@@ -135,8 +114,6 @@
   async function uploadImage(dataUrl) {
     if (!dataUrl) return false;
 
-    console.log("[ChatGPT Inject] Starting image upload...");
-
     var res = await fetch(dataUrl);
     var blob = await res.blob();
     var file = new File([blob], "pasted-image.png", { type: blob.type || "image/png" });
@@ -154,7 +131,6 @@
     }
 
     if (!fileInput) {
-      console.log("[ChatGPT Inject] File input not found, looking for attachment button...");
       
       var attachButtonSelectors = [
         'button[aria-label*="Attach"]',
@@ -183,7 +159,6 @@
       return false;
     }
 
-    console.log("[ChatGPT Inject] Found file input, uploading...");
 
     var dt = new DataTransfer();
     dt.items.add(file);
@@ -192,12 +167,10 @@
 
     await delay(1000);
 
-    console.log("[ChatGPT Inject] Image upload dispatched");
     return true;
   }
 
   async function clickSend() {
-    console.log("[ChatGPT Inject] Looking for send button...");
 
     var sendButtonSelectors = [
       '#composer-submit-button',
@@ -217,7 +190,6 @@
       }
 
       if (sendBtn.disabled) {
-        console.log("[ChatGPT Inject] Send button still disabled, trying Enter key...");
         var textarea = document.querySelector("#prompt-textarea, textarea");
         if (textarea) {
           textarea.dispatchEvent(new KeyboardEvent("keydown", {
@@ -231,7 +203,6 @@
         return;
       }
 
-      console.log("[ChatGPT Inject] Clicking send button");
       sendBtn.click();
     } catch (e) {
       console.error("[ChatGPT Inject] Could not find send button:", e);
@@ -249,10 +220,6 @@
       }
     }
   }
-
-  // ============================================
-  // MAIN MESSAGE HANDLER
-  // ============================================
 
   async function handleInjectMessage(msg) {
     reportStatus("Received message", { textLength: (msg.text && msg.text.length) || 0, hasImage: !!msg.image });
@@ -289,7 +256,6 @@
     }
   }
 
-  // Listen for messages from background script
   if (browserAPI && browserAPI.runtime && browserAPI.runtime.onMessage) {
     browserAPI.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
       if (msg.type === "INJECT_MESSAGE") {
@@ -301,6 +267,5 @@
   }
 
   reportStatus("Script loaded and ready");
-  console.log("[ChatGPT Inject] ========== SCRIPT FULLY LOADED ==========");
 
 })();
