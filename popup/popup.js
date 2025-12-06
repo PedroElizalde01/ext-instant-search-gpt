@@ -55,53 +55,92 @@
       cmd.name && COMMAND_NAMES[cmd.name]
     );
 
-    if (ourCommands.length === 0) {
-      container.innerHTML = `
-        <div class="shortcut-item">
-          <span class="shortcut-name">ChatGPT</span>
-          <span class="shortcut-key">Ctrl+Shift+Y</span>
-        </div>
-        <div class="shortcut-item">
-          <span class="shortcut-name">ChatGPT (Temporary)</span>
-          <span class="shortcut-key">Ctrl+Shift+U</span>
-        </div>
-        <div class="shortcut-item">
-          <span class="shortcut-name">Claude</span>
-          <span class="shortcut-key">Ctrl+Shift+I</span>
-        </div>
-        <div class="shortcut-item">
-          <span class="shortcut-name">Claude (Incognito)</span>
-          <span class="shortcut-key">Ctrl+Shift+O</span>
-        </div>
-      `;
-      return;
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
     }
 
-    container.innerHTML = ourCommands.map(cmd => `
-      <div class="shortcut-item">
-        <span class="shortcut-name">${COMMAND_NAMES[cmd.name] || cmd.name}</span>
-        <span class="shortcut-key">${cmd.shortcut || "Not set"}</span>
-      </div>
-    `).join("");
+    const commandsToRender = ourCommands.length === 0 ? [
+      { name: "ChatGPT", shortcut: "Ctrl+Shift+Y" },
+      { name: "ChatGPT (Temporary)", shortcut: "Ctrl+Shift+U" },
+      { name: "Claude", shortcut: "Ctrl+Shift+I" },
+      { name: "Claude (Incognito)", shortcut: "Ctrl+Shift+O" }
+    ] : ourCommands.map(cmd => ({
+      name: COMMAND_NAMES[cmd.name] || cmd.name,
+      shortcut: cmd.shortcut || "Not set"
+    }));
+
+    commandsToRender.forEach(cmd => {
+      const item = document.createElement("div");
+      item.className = "shortcut-item";
+      
+      const nameSpan = document.createElement("span");
+      nameSpan.className = "shortcut-name";
+      nameSpan.textContent = cmd.name;
+      
+      const keySpan = document.createElement("span");
+      keySpan.className = "shortcut-key";
+      keySpan.textContent = cmd.shortcut;
+      
+      item.appendChild(nameSpan);
+      item.appendChild(keySpan);
+      container.appendChild(item);
+    });
   }
 
   function renderProviders() {
     const container = document.getElementById("provider-list");
     if (!container) return;
 
-    container.innerHTML = Object.entries(PROVIDERS).map(([id, provider]) => `
-      <div class="provider-item">
-        <svg class="provider-icon" viewBox="0 0 20 20" fill="${provider.color}">
-          <circle cx="10" cy="10" r="8" opacity="0.2"/>
-          <circle cx="10" cy="10" r="4"/>
-        </svg>
-        <div class="provider-info">
-          <div class="provider-name">${provider.name}</div>
-          <div class="provider-features">${provider.features}</div>
-        </div>
-        <div class="provider-status" title="Active"></div>
-      </div>
-    `).join("");
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
+
+    Object.entries(PROVIDERS).forEach(([id, provider]) => {
+      const item = document.createElement("div");
+      item.className = "provider-item";
+      
+      const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      icon.className = "provider-icon";
+      icon.setAttribute("viewBox", "0 0 20 20");
+      icon.setAttribute("fill", provider.color);
+      
+      const circle1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle1.setAttribute("cx", "10");
+      circle1.setAttribute("cy", "10");
+      circle1.setAttribute("r", "8");
+      circle1.setAttribute("opacity", "0.2");
+      
+      const circle2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle2.setAttribute("cx", "10");
+      circle2.setAttribute("cy", "10");
+      circle2.setAttribute("r", "4");
+      
+      icon.appendChild(circle1);
+      icon.appendChild(circle2);
+      
+      const info = document.createElement("div");
+      info.className = "provider-info";
+      
+      const name = document.createElement("div");
+      name.className = "provider-name";
+      name.textContent = provider.name;
+      
+      const features = document.createElement("div");
+      features.className = "provider-features";
+      features.textContent = provider.features;
+      
+      info.appendChild(name);
+      info.appendChild(features);
+      
+      const status = document.createElement("div");
+      status.className = "provider-status";
+      status.setAttribute("title", "Active");
+      
+      item.appendChild(icon);
+      item.appendChild(info);
+      item.appendChild(status);
+      container.appendChild(item);
+    });
   }
 
   function setupEventListeners() {

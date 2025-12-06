@@ -28,35 +28,76 @@ const AISearchModal = (function() {
     document.head.appendChild(link);
   }
 
-  function createModalHTML(provider, temporary) {
+  function createModalDOM(provider, temporary) {
     const iconColor = temporary ? provider.colors.temporary : provider.colors.normal;
     const modeText = temporary && provider.hasTemporaryMode ? provider.id === "claude" ? "Incognito" : "Temporary" : "Normal";
     const modeClass = temporary ? "temporary" : "";
     
-    return `
-      <div class="modal-backdrop"></div>
-      <div class="modal-box">
-        <span class="modal-mode-indicator ${modeClass}" id="modal-mode-indicator" style="color: ${temporary ? provider.colors.temporary : '#6b7280'}">${modeText}</span>
-        <div class="modal-search-wrapper">
-          <svg class="modal-provider-icon" id="modal-provider-icon" 
-               width="20" height="20" viewBox="${provider.iconViewBox || '0 0 20 20'}" 
-               fill="currentColor" xmlns="http://www.w3.org/2000/svg" 
-               title="Click to toggle mode"
-               style="color: ${iconColor}">
-            ${provider.icon}
-          </svg>
-          <textarea id="ai-search-input" placeholder="Ask ${provider.name}" rows="1" autofocus></textarea>
-        </div>
-        <div id="image-preview-container"></div>
-      </div>
-    `;
+    const backdrop = document.createElement("div");
+    backdrop.className = "modal-backdrop";
+    
+    const modalBox = document.createElement("div");
+    modalBox.className = "modal-box";
+    
+    const modeIndicator = document.createElement("span");
+    modeIndicator.className = "modal-mode-indicator " + modeClass;
+    modeIndicator.id = "modal-mode-indicator";
+    modeIndicator.style.color = temporary ? provider.colors.temporary : "#6b7280";
+    modeIndicator.textContent = modeText;
+    
+    const searchWrapper = document.createElement("div");
+    searchWrapper.className = "modal-search-wrapper";
+    
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.className = "modal-provider-icon";
+    icon.id = "modal-provider-icon";
+    icon.setAttribute("width", "20");
+    icon.setAttribute("height", "20");
+    icon.setAttribute("viewBox", provider.iconViewBox || "0 0 20 20");
+    icon.setAttribute("fill", "currentColor");
+    icon.setAttribute("title", "Click to toggle mode");
+    icon.style.color = iconColor;
+    
+    // Parse and add icon path - extract d attribute safely
+    try {
+      // Extract d attribute from path element using regex (safer than innerHTML)
+      const pathMatch = provider.icon.match(/d=["']([^"']+)["']/);
+      if (pathMatch && pathMatch[1]) {
+        const iconPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        iconPath.setAttribute("d", pathMatch[1]);
+        icon.appendChild(iconPath);
+      }
+    } catch (e) {
+      console.error("Failed to parse icon:", e);
+    }
+    
+    const textarea = document.createElement("textarea");
+    textarea.id = "ai-search-input";
+    textarea.placeholder = "Ask " + provider.name;
+    textarea.rows = 1;
+    textarea.setAttribute("autofocus", "");
+    
+    const imageContainer = document.createElement("div");
+    imageContainer.id = "image-preview-container";
+    
+    searchWrapper.appendChild(icon);
+    searchWrapper.appendChild(textarea);
+    modalBox.appendChild(modeIndicator);
+    modalBox.appendChild(searchWrapper);
+    modalBox.appendChild(imageContainer);
+    
+    backdrop.appendChild(modalBox);
+    
+    return backdrop;
   }
 
   function renderImagePreviews() {
     const container = document.getElementById("image-preview-container");
     if (!container) return;
     
-    container.innerHTML = "";
+    while (container.firstChild) {
+      container.removeChild(container.firstChild);
+    }
     container.style.marginTop = pastedImages.length > 0 ? "10px" : "0";
     
     pastedImages.forEach((dataUrl, index) => {
@@ -68,7 +109,7 @@ const AISearchModal = (function() {
       
       const removeBtn = document.createElement("button");
       removeBtn.className = "image-preview-remove";
-      removeBtn.innerHTML = "×";
+      removeBtn.textContent = "×";
       removeBtn.title = "Remove image";
       removeBtn.onclick = function(e) {
         e.stopPropagation();
@@ -171,7 +212,8 @@ const AISearchModal = (function() {
     
     const modal = document.createElement("div");
     modal.id = MODAL_ID;
-    modal.innerHTML = createModalHTML(provider, isTemporaryMode);
+    const modalContent = createModalDOM(provider, isTemporaryMode);
+    modal.appendChild(modalContent);
     document.body.appendChild(modal);
     
     const backdrop = modal.querySelector(".modal-backdrop");

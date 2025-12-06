@@ -46,7 +46,9 @@
     textarea.focus();
     
     if (textarea.classList.contains('ProseMirror')) {
-      textarea.innerHTML = '';
+      while (textarea.firstChild) {
+        textarea.removeChild(textarea.firstChild);
+      }
       
       const p = document.createElement("p");
       p.textContent = text;

@@ -3,10 +3,6 @@
   "name": "AI Instant Search",
   "version": "2.0",
   "description": "Press keyboard shortcuts to quickly search AI assistants like ChatGPT and Claude.",
-  "icons": {
-    "48": "icons/icon.svg",
-    "96": "icons/icon.svg"
-  },
   "browser_specific_settings": {
     "gecko": {
       "id": "instant-search-gpt@pedroelizalde",
@@ -61,7 +57,6 @@
     }
   },
   "browser_action": {
-    "default_popup": "popup/popup.html",
-    "default_icon": "icons/icon.svg"
+    "default_popup": "popup/popup.html"
   }
 }
