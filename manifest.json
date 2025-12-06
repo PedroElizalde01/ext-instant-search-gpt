@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "ChatGPT Instant Search",
+  "version": "1.2",
+  "description": "Press Ctrl+Shift+Y to open a searchbar type input to initiate a chat with ChatGPT.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "zen-chatgpt-launcher@example.com",
+      "data_collection_permissions": {
+        "required": ["none"],
+        "optional": []
+      }
+    }
+  },
+  "permissions": ["activeTab", "tabs", "*://chatgpt.com/*"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": true
+  },
+  "commands": {
+    "open-palette": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y"
+      },
+      "description": "Open ChatGPT Launcher"
+    }
+  }
+}
