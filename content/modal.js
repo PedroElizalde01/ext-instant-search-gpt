@@ -11,6 +11,7 @@ const AISearchModal = (function() {
   let currentProvider = null;
   let isTemporaryMode = false;
   let onSubmitCallback = null;
+  let escHandler = null;
 
   function getBrowser() {
     if (typeof browser !== "undefined") return browser;
@@ -42,14 +43,14 @@ const AISearchModal = (function() {
     const modeIndicator = document.createElement("span");
     modeIndicator.className = "modal-mode-indicator " + modeClass;
     modeIndicator.id = "modal-mode-indicator";
-    modeIndicator.style.color = temporary ? provider.colors.temporary : "#6b7280";
+    modeIndicator.style.color = iconColor;
     modeIndicator.textContent = modeText;
     
     const searchWrapper = document.createElement("div");
     searchWrapper.className = "modal-search-wrapper";
     
     const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    icon.className = "modal-provider-icon";
+    icon.setAttribute("class", "modal-provider-icon");
     icon.id = "modal-provider-icon";
     icon.setAttribute("width", "20");
     icon.setAttribute("height", "20");
@@ -141,7 +142,7 @@ const AISearchModal = (function() {
       indicator.classList.add("temporary");
     } else {
       icon.style.color = currentProvider.colors.normal;
-      indicator.style.color = "#6b7280";
+      indicator.style.color = currentProvider.colors.normal;
       indicator.textContent = "Normal";
       indicator.classList.remove("temporary");
     }
@@ -153,6 +154,10 @@ const AISearchModal = (function() {
     
     pastedImages = [];
     document.removeEventListener("paste", handlePaste);
+    if (escHandler) {
+      document.removeEventListener("keydown", escHandler);
+      escHandler = null;
+    }
   }
 
   function handlePaste(e) {
@@ -217,10 +222,28 @@ const AISearchModal = (function() {
     document.body.appendChild(modal);
     
     const backdrop = modal.querySelector(".modal-backdrop");
+    const modalBox = modal.querySelector(".modal-box");
     const input = document.getElementById("ai-search-input");
     const icon = document.getElementById("modal-provider-icon");
     
-    backdrop.onclick = close;
+    backdrop.onclick = function(e) {
+      if (e.target === backdrop) {
+        close();
+      }
+    };
+    
+    if (modalBox) {
+      modalBox.onclick = function(e) {
+        e.stopPropagation();
+      };
+    }
+    
+    escHandler = function(e) {
+      if (e.key === "Escape") {
+        close();
+      }
+    };
+    document.addEventListener("keydown", escHandler);
     
     if (provider.hasTemporaryMode) {
       icon.onclick = function(e) {
